@@ -449,7 +449,6 @@ class instance extends instance_skel {
 			},
 		}
 		this.setActions(actions)
-		console.log(actions)
 	}
 
 	action(action) {
