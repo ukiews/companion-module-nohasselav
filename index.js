@@ -740,7 +740,7 @@ class instance extends instance_skel {
 				},
 				actions: [
 					{
-						action: output_switch',
+						action: 'output_switch',
 						options: {
 							output: output,
 							stateToggle: 'toggle',
