@@ -31,7 +31,7 @@ class instance extends instance_skel {
 		this.selectedInput = 1
 		this.outputRoute = {}
 		this.outputHDMI = {}
-		this.outputCAT = {}
+		//this.outputCAT = {}
 	}
 
 	destroy() {
@@ -115,20 +115,22 @@ class instance extends instance_skel {
 					}
 					/*
 					example poll responses from switch:
-					input 1 -> output 4
-					Enable hdmi output 1 stream
-					Disable cat output 4 stream
+					output1->input1 (OLD: input 1 -> output 4)
+					output 1 stream: enable (OLD: Enable hdmi output 1 stream)
+					(OLD: Disable cat output 4 stream)
 					*/
-					if (tokens[0] == 'input') {
+					if (tokens[0] == 'output1->input1') {
 						this.updateRoute(tokens[4], tokens[1])
 					} else {
-						switch (tokens[1]) {
-							case 'hdmi':
-								this.updateHDMI(tokens[3], tokens[0].toLowerCase())
+						switch (tokens[0]) {
+							case 'output':
+								this.updateOUTPUT(tokens[1], tokens[3].toLowerCase())
 								break
+							/*	
 							case 'cat':
 								this.updateCAT(tokens[3], tokens[0].toLowerCase())
 								break
+							*/
 						}
 					}
 				}
@@ -151,9 +153,9 @@ class instance extends instance_skel {
 		// read switch state, possible changes using controls on the unit or web interface, 0 for all channels
 		if (this.pollMixerTimer === undefined) {
 			this.pollMixerTimer = setInterval(() => {
-				this.sendCommmand('r av out 0!')
-				this.sendCommmand('r hdmi 0 stream!')
-				this.sendCommmand('r cat 0 stream!')
+				this.sendCommmand('r output 0 in source!')
+				this.sendCommmand('r output 0 stream!')
+				//this.sendCommmand('r cat 0 stream!')
 			}, this.config.poll_interval)
 		}
 	}
@@ -175,7 +177,7 @@ class instance extends instance_skel {
 		this.setVariable(`output_route${output}`, input)
 		this.updateMatrixVariables()
 	}
-
+	/*
 	updateCAT(output, stateToggle) {
 		if (stateToggle == 'toggle') {
 			this.outputCAT[output] == 'disable' ? (stateToggle = 'enable') : (stateToggle = 'disable')
@@ -183,7 +185,8 @@ class instance extends instance_skel {
 		this.outputCAT[output] = stateToggle
 		return stateToggle == 'disable' ? '0' : '1'
 	}
-	updateHDMI(output, stateToggle) {
+ 	*/
+	updateOUTPUT(output, stateToggle) {
 		if (stateToggle == 'toggle') {
 			this.outputHDMI[output] == 'disable' ? (stateToggle = 'enable') : (stateToggle = 'disable')
 		}
@@ -195,7 +198,7 @@ class instance extends instance_skel {
 		this.CHOICES_INPUTS = []
 		this.CHOICES_OUTPUTS = []
 		this.outputRoute = {}
-		this.outputCAT = {}
+		//this.outputCAT = {}
 		this.outputHDMI = {}
 		if (topcount > 0) {
 			for (let i = 1; i <= topcount; i++) {
@@ -205,7 +208,7 @@ class instance extends instance_skel {
 				this.CHOICES_INPUTS.push(channelObj)
 				this.CHOICES_OUTPUTS.push(channelObj)
 				this.outputRoute[i] = i
-				this.outputCAT[i] = 'enable'
+				//this.outputCAT[i] = 'enable'
 				this.outputHDMI[i] = 'enable'
 			}
 		}
@@ -239,7 +242,7 @@ class instance extends instance_skel {
 				id: 'info',
 				width: 12,
 				label: 'Information',
-				value: 'This module will connect to an OREI HDMI MATRIX EXTENDER',
+				value: 'This module will connect to an HDP_MXB44VW HDMI MATRIX',
 			},
 			{
 				type: 'textinput',
@@ -399,6 +402,7 @@ class instance extends instance_skel {
 					},
 				],
 			},
+/* 	
 			cat_switch: {
 				label: 'Enable/Disable CAT output',
 				options: [
@@ -417,7 +421,8 @@ class instance extends instance_skel {
 					},
 				],
 			},
-			hdmi_switch: {
+   */
+			output_switch: {
 				label: 'Enable/Disable HDMI output',
 				options: [
 					{
@@ -458,11 +463,11 @@ class instance extends instance_skel {
 				this.selectedInput = options.input
 				break
 			case 'switch_output':
-				this.sendCommmand('s in ' + this.selectedInput + ' av out ' + options.output + '!')
+				this.sendCommmand('s output ' + options.output + ' in source ' + this.selectedInput + '!')
 				this.updateRoute(options.output, this.selectedInput)
 				break
 			case 'input_output':
-				this.sendCommmand('s in ' + options.input + ' av out ' + options.output + '!')
+				this.sendCommmand('s output ' + options.output + ' in source ' + options.input + '!')
 				this.updateRoute(options.output, options.input)
 				break
 			case 'all':
@@ -470,7 +475,7 @@ class instance extends instance_skel {
 				if (!options.selected) {
 					myInput = options.input
 				}
-				this.sendCommmand('s in ' + myInput + 'av out 0!')
+				this.sendCommmand('s output 0 in source ' + myInput + '!')
 				for (let key in this.outputRoute) {
 					if (key <= this.config.channels) {
 						this.updateRoute(key, myInput)
@@ -486,14 +491,16 @@ class instance extends instance_skel {
 			case 'clear_preset':
 				this.sendCommmand('s clear preset ' + options.preset + '!')
 				break
+		/*	
 			case 'cat_switch':
 				this.sendCommmand(
 					's cat ' + options.output + ' stream ' + this.updateCAT(options.output, options.stateToggle) + '!'
 				)
 				break
-			case 'hdmi_switch':
+    */
+			case 'output_switch':
 				this.sendCommmand(
-					's hdmi ' + options.output + ' stream ' + this.updateHDMI(options.output, options.stateToggle) + '!'
+					's output ' + options.output + ' stream ' + this.updateOUTPUT(options.output, options.stateToggle) + '!'
 				)
 				break
 			case 'power':
@@ -584,6 +591,7 @@ class instance extends instance_skel {
 				}
 			},
 		}
+		/*
 		feedbacks['stateCAT'] = {
 			type: 'boolean',
 			label: 'State for CAT output',
@@ -610,6 +618,7 @@ class instance extends instance_skel {
 				}
 			},
 		}
+  		*/
 		this.setFeedbackDefinitions(feedbacks)
 		this.checkFeedbacks()
 	}
@@ -682,6 +691,7 @@ class instance extends instance_skel {
 				],
 			}
 		}
+		/*
 		const aCATPreset = (output) => {
 			return {
 				category: 'stateCAT',
@@ -716,7 +726,7 @@ class instance extends instance_skel {
 				],
 			}
 		}
-
+		*/
 		const aHDMIPreset = (output) => {
 			return {
 				category: 'stateHDMI',
@@ -730,7 +740,7 @@ class instance extends instance_skel {
 				},
 				actions: [
 					{
-						action: 'hdmi_switch',
+						action: output_switch',
 						options: {
 							output: output,
 							stateToggle: 'toggle',
@@ -780,9 +790,11 @@ class instance extends instance_skel {
 		this.CHOICES_OUTPUTS.forEach((output) => {
 			presets.push(aSwitchPreset(output.id))
 		})
+		/*
 		this.CHOICES_OUTPUTS.forEach((output) => {
 			presets.push(aCATPreset(output.id))
 		})
+  		*/
 		this.CHOICES_OUTPUTS.forEach((output) => {
 			presets.push(aHDMIPreset(output.id))
 		})
