@@ -1,24 +1,24 @@
 {
-	"name": "orei-matrix",
+	"name": "HDP_MXB44VW-matrix",
 	"version": "1.0.0",
 	"api_version": "1.0.0",
 	"keywords": [ "HDMI Matrix" ],
-	"manufacturer": "OREI",
-	"product": "MATRIX EXTENDER",
-	"shortname": "MATRIX EXTENDER",
-	"description": "OREI HDMI MATRIX EXTENDER 4x4 or 8x8",
+	"manufacturer": "No Hassel AV",
+	"product": "4x4 Matrix",
+	"shortname": "4x4 Matrix",
+	"description": "Control HDP_MXB44VW 4x4 or 8x8 matrix",
 	"main": "index.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/bitfocus/companion-module-orei-matrix.git"
+		"url": "git+https://github.com/ukiews/companion-module-nohasselav.git"
 	},
-	"author": "James Rankin <james@rankinfamily.com>",
+	"author": "Ukie",
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/bitfocus/companion-module-orei-matrix/issues"
+		"url": "https://github.com/ukiews/companion-module-nohasselav"
 	},
-	"homepage": "https://github.com/bitfocus/companion-module-orei-matrix#readme"
+	"homepage": "https://github.com/ukiews/companion-module-nohasselav"
 }
