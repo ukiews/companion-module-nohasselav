@@ -1,4 +1,4 @@
-// OREI HDMI MATRIX EXTENDER
+// HDP_MXB44VW HDMI MATRIX
 
 let tcp = require('../../tcp')
 let instance_skel = require('../../instance_skel')
